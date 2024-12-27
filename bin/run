@@ -1,0 +1,3 @@
+#!/bin/bash
+# Runs containers.
+docker compose up

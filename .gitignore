@@ -1,0 +1,108 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+staticfiles/CACHE/
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Translations
+# *.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+migrate.bat
+start.bat
+
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# dotenv
+.env
+
+db.sqlite3
+.DS_Store
+templates/dynamic/*
+static/dist/*
+node_modules/*
+package-lock.json
+*.key
+*.crt
+*.pem
+env.db.prod
+env.dev
+env.prod
+static/css/bootstrap_custom*
+*.sqlite3
+node_modules*
+local_environ.py
+local_*
+
+
+# Collected static files #
+src/static_collected/
+
+# Uploaded files
+src/upload/
+
+# Postgres db files
+postgres_data/
+
+# Webpack
+/src/webpack-stats.json
+/src/static/webpack_bundles/
+src/templates/dynamic/
+yarn.lock
+
+### PyCharm+all Patch ###
+# Ignore everything but code style settings and run configurations
+# that are supposed to be shared within teams.
+
+.idea/*
+
+!.idea/codeStyles
+!.idea/runConfigurations
+*.exe
+
+venv/
