@@ -1,8 +1,8 @@
 from django.conf import settings
+from rest_framework.exceptions import PermissionDenied
 
 from common.base_models import TenantIsolationMixIn
 from common.base_serializers import BaseTenantSerializer
-from rest_framework.exceptions import PermissionDenied
 
 
 def tenant_isolation_view(cls):

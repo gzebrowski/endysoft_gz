@@ -4,7 +4,6 @@ from django.utils.html import format_html
 
 from apps.core.models import (Customer, Department, Organization, Tenant,
                               TenantUser)
-from common.admin_utils import AdminRequestFormMixIn
 
 
 @admin.register(TenantUser)
