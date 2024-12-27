@@ -10,9 +10,6 @@ class TimestampModel(models.Model):
 
 
 class TenantIsolationManager(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(tenant_id=self.tenant_id)
-
     def create(self, tenant_id=None, **kwargs):
         assert tenant_id, "tenant_id is required"
         kwargs['tenant_id'] = tenant_id

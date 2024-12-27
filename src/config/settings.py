@@ -141,14 +141,12 @@ TENANT_HEADER = "X-Tenant-Name"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-# drf_spectacular.authentication.TokenScheme
 REST_FRAMEWORK = {
     # "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_SCHEMA_CLASS": "common.custom_schema.CustomSchema",
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-    )
+    ],
 }
 
 SPECTACULAR_SETTINGS = {

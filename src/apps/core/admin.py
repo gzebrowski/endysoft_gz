@@ -47,24 +47,24 @@ class TenantAdmin(admin.ModelAdmin):
 
 
 @admin.register(Organization)
-class OrganizationAdmin(AdminRequestFormMixIn, admin.ModelAdmin):
+class OrganizationAdmin(admin.ModelAdmin):
     list_display = ["id", "name", "created_at", "updated_at"]
     search_fields = ["name"]
     list_filter = ["created_at", "updated_at"]
-    readonly_fields = ["created_at", "updated_at"]
+    readonly_fields = ["created_at", "updated_at", "tenant_id"]
 
 
 @admin.register(Department)
-class DepartmentAdmin(AdminRequestFormMixIn, admin.ModelAdmin):
+class DepartmentAdmin(admin.ModelAdmin):
     list_display = ["id", "name", "organization", "created_at", "updated_at"]
     search_fields = ["name"]
     list_filter = ["created_at", "updated_at"]
-    readonly_fields = ["created_at", "updated_at"]
+    readonly_fields = ["created_at", "updated_at", "tenant_id"]
 
 
 @admin.register(Customer)
-class CustomerAdmin(AdminRequestFormMixIn, admin.ModelAdmin):
+class CustomerAdmin(admin.ModelAdmin):
     list_display = ["id", "name", "department", "email", "phone", "created_at", "updated_at"]
     search_fields = ["name", "email"]
     list_filter = ["created_at", "updated_at"]
-    readonly_fields = ["created_at", "updated_at"]
+    readonly_fields = ["created_at", "updated_at", "tenant_id"]

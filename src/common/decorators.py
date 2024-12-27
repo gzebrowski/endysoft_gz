@@ -2,6 +2,7 @@ from django.conf import settings
 
 from common.base_models import TenantIsolationMixIn
 from common.base_serializers import BaseTenantSerializer
+from rest_framework.exceptions import PermissionDenied
 
 
 def tenant_isolation_view(cls):
@@ -9,6 +10,8 @@ def tenant_isolation_view(cls):
     What this decorator does is:
     - Inject BaseTenantSerializer to serializer_class attribute if exists
     - Inject BaseTenantSerializer to result of get_serializer_class method if exists
+    - Inject get_queryset method to filter queryset by tenant_id if model has tenant_id field
+    - Inject initial method to check if user is staff or tenant is matched
     - checks if the model of serializer is inherited from TenantIsolationMixIn
     - adds attribute _is_tenant_isolation_view_injected to class to be used by middleware
     """
@@ -35,6 +38,16 @@ def tenant_isolation_view(cls):
         cls.serializer_class = mix_serializer_cls(_serializer_class)
 
     origin_get_serializer_class = getattr(cls, 'get_serializer_class', None)
+    origin_get_queryset = getattr(cls, 'get_queryset', None)
+
+    def get_queryset(self):
+        queryset = origin_get_queryset(self)
+        if hasattr(queryset.model, 'tenant_id'):
+            return queryset.filter(tenant_id=self.request.tenant_id)
+        return queryset
+
+    cls.get_queryset = get_queryset
+
     if origin_get_serializer_class:
         def get_serializer_class(self):
             serializer_cls = origin_get_serializer_class(self)
@@ -43,4 +56,17 @@ def tenant_isolation_view(cls):
             return serializer_cls
 
         cls.get_serializer_class = get_serializer_class
+
+    orig_initial_request = getattr(cls, 'initial', None)
+
+    def initial(self, request, *args, **kwargs):
+        orig_initial_request(self, request, *args, **kwargs)
+        if not request.user.is_staff:
+            tenant = getattr(request, 'tenant', None)
+            if not request.user.is_authenticated or not tenant or not tenant.check_user(request.user):
+                raise PermissionDenied("Tenant mismatch")
+        return request
+
+    cls.initial = initial
+
     return cls

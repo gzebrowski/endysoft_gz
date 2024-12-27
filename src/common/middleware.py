@@ -1,5 +1,5 @@
 from django.conf import settings
-from rest_framework.exceptions import PermissionDenied
+from django.http import JsonResponse
 
 from apps.core.models import Tenant
 from common.middleware_base import BaseMiddleware
@@ -13,9 +13,11 @@ class DetectTenantMiddleware(BaseMiddleware):
         else:
             key = request.headers.get(settings.TENANT_HEADER)
         tenant = Tenant.objects.filter(domain=key).first()
+        request.tenant_id = tenant.pk if tenant else None
         request.tenant = tenant
-        view_class = getattr(view_func, '__class__', None)
-        if tenant and view_class and hasattr(view_class, '_is_tenant_isolation_view_injected'):
-            if not request.user.is_staff:
-                if not request.user.is_authenticated or not tenant.check_user(request.user):
-                    raise PermissionDenied("Tenant mismatch")
+        tenant_required = False
+        view_class = getattr(view_func, 'cls', None)
+        if view_class and hasattr(view_class, '_is_tenant_isolation_view_injected'):
+            tenant_required = True
+        if tenant_required and not tenant:
+            return JsonResponse({"error": "Tenant not found"}, status=400)

@@ -7,25 +7,25 @@ from apps.core.models import (Customer, Department, Organization, Tenant,
 class OrganizationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organization
-        fields = ("name", "details")
+        fields = ("id", "name", "details")
 
 
 class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Department
-        fields = ("name", "details")
+        fields = ("id", "name", "details", "organization")
 
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
-        fields = ("name", "email", "phone")
+        fields = ("id", "name", "email", "phone", "department")
 
 
 class TenantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tenant
-        fields = ("domain", "name")
+        fields = ("id", "domain", "name")
 
     def create(self, validated_data):
         tenant = Tenant.objects.create(**validated_data)
