@@ -12,7 +12,7 @@ class DetectTenantMiddleware(BaseMiddleware):
             key = host.split('.')[0]
         else:
             key = request.headers.get(settings.TENANT_HEADER)
-        tenant = Tenant.objects.filter(domain=key).first()
+        tenant = Tenant.get_tenant(key)
         request.tenant_id = tenant.pk if tenant else None
         request.tenant = tenant
         tenant_required = False

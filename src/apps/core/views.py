@@ -30,9 +30,21 @@ class CustomerView(AppCommonView):
     queryset = Customer.objects
     serializer_class = CustomerSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(department_id=self.kwargs.get("department"))
+
+    def get_queryset(self):
+        return self.queryset.filter(department_id=self.kwargs.get("department"))
+
 
 @extend_schema(request=DepartmentSerializer)
 @tenant_isolation_view
 class DepartmentView(AppCommonView):
     queryset = Department.objects
     serializer_class = DepartmentSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(organization_id=self.kwargs.get("organization"))
+
+    def get_queryset(self):
+        return self.queryset.filter(organization_id=self.kwargs.get("organization"))

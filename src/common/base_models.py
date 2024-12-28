@@ -10,7 +10,7 @@ class TimestampModel(models.Model):
 
 
 class TenantIsolationManager(models.Manager):
-    def create(self, tenant_id=None, **kwargs):
+    def create(self, tenant_id: int = None, **kwargs):
         assert tenant_id, "tenant_id is required"
         kwargs['tenant_id'] = tenant_id
         return super().create(**kwargs)

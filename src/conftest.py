@@ -4,6 +4,11 @@ from django.conf import settings
 from django.utils.module_loading import import_module, import_string
 from rest_framework.test import APIClient
 
+
+'''
+This code below just search for all installed apps and import the app_conftest.py file and then 
+import all fixtures from it to the global scope. This way, you can use the fixtures in your tests
+'''
 app_list = []
 for app in settings.INSTALLED_APPS:
     if not app.startswith("apps."):
@@ -23,6 +28,8 @@ for app in app_list:
     else:
         for attr in dir(cnf_mod):
             item = getattr(cnf_mod, attr)
+            # all functions decorated with @pytest.fixture has attribute _pytestfixturefunction. So we know
+            # that this is a fixture
             if hasattr(item, "_pytestfixturefunction"):
                 globals()[attr] = item
 

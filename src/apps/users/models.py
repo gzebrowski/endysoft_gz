@@ -10,7 +10,7 @@ from rest_framework.authtoken.models import Token
 
 class AppUserManager(UserManager):
     @classmethod
-    def normalize_email(cls, email):
+    def normalize_email(cls, email: str):
         if not email:
             return None
         return email.strip().lower()
@@ -22,7 +22,7 @@ class AppUserManager(UserManager):
         username, email = self._prepare_login_fields(username, email)
         return super().create_user(username, email, password, **extra_fields)
 
-    def _prepare_login_fields(self, username, email):
+    def _prepare_login_fields(self, username: str, email: str):
         try:
             validate_email(username)
         except ValidationError:
@@ -56,7 +56,8 @@ class AppUser(AbstractUser):
         return "%s" % self.username
 
     @classmethod
-    def check_credentials(cls, email=None, password=None, token=None):
+    def check_credentials(cls, email: Optional[str] = None, password: Optional[str] = None,
+                          token: Optional[str] = None):
         user = None
         if token:
             user = authenticate(user_hash=token)

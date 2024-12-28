@@ -9,7 +9,7 @@ router = DefaultRouter()
 router.register("users", UsersViewSet, basename="users_url")
 router.register("tenants", TenantView, basename="tenants_url")
 router.register("organizations", OrganizationView, basename="organizations_url")
-router.register("departments", DepartmentView, basename="departments_url")
-router.register("customers", CustomerView, basename="customers_url")
+router.register(r"departments/(?P<organization>\d+)", DepartmentView, basename="departments_url")
+router.register(r"customers/(?P<department>\d+)", CustomerView, basename="customers_url")
 
 urlpatterns = router.urls

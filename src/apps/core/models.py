@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 
 from common.base_models import TenantIsolationMixIn, TimestampModel
+from common.cache_utils import method_cache
 
 
 class TenantUser(models.Model):
@@ -15,6 +16,11 @@ class Tenant(TimestampModel):
 
     def __str__(self):
         return self.name or self.domain
+
+    @classmethod
+    @method_cache
+    def get_tenant(cls, domain):
+        return cls.objects.filter(domain=domain).first()
 
     def check_user(self, user):
         return TenantUser.objects.filter(user=user, tenant=self).exists()

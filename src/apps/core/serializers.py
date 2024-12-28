@@ -13,13 +13,14 @@ class OrganizationSerializer(serializers.ModelSerializer):
 class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Department
-        fields = ("id", "name", "details", "organization")
+        fields = ("id", "name", "details")
 
 
 class CustomerSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Customer
-        fields = ("id", "name", "email", "phone", "department")
+        fields = ("id", "name", "email", "phone")
 
 
 class TenantSerializer(serializers.ModelSerializer):

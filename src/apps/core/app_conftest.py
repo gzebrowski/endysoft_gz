@@ -1,6 +1,6 @@
 import pytest
 from django.conf import settings
-from apps.core.models import Tenant, TenantUser
+from apps.core.models import Tenant, TenantUser, Organization, Department
 
 
 @pytest.fixture
@@ -42,3 +42,30 @@ class ApiWrapper:
 @pytest.fixture
 def api_tenant_client(api_client):
     return ApiWrapper(api_client)
+
+
+@pytest.fixture
+def organization1_tenant1(tenant1):
+    return Organization.objects.create(
+        name="Organization 1/1",
+        details="Details 1/1",
+        tenant_id=tenant1.pk,
+    )
+
+
+@pytest.fixture
+def organization2_tenant1(tenant1):
+    return Organization.objects.create(
+        name="Organization 2/1",
+        details="Details 2/1",
+        tenant_id=tenant1.pk,
+    )
+
+
+@pytest.fixture
+def organization1_tenant2(tenant2):
+    return Organization.objects.create(
+        name="Organization 1/2",
+        details="Details 1/2",
+        tenant_id=tenant2.pk,
+    )

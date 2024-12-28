@@ -1,11 +1,12 @@
 from django.conf import settings
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.views import APIView
 
 from common.base_models import TenantIsolationMixIn
 from common.base_serializers import BaseTenantSerializer
 
 
-def tenant_isolation_view(cls):
+def tenant_isolation_view(cls: APIView):
     """
     What this decorator does is:
     - Inject BaseTenantSerializer to serializer_class attribute if exists
