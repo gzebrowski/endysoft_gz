@@ -16,6 +16,9 @@ def tenant_isolation_view(cls):
     - adds attribute _is_tenant_isolation_view_injected to class to be used by middleware
     """
     def check_serializer_model(serializer_klass):
+        """
+        Just for validation purposes in debug mode
+        """
         if settings.DEBUG:
             meta_cls = getattr(serializer_klass, 'Meta', None)
             if meta_cls:
@@ -50,6 +53,9 @@ def tenant_isolation_view(cls):
 
     if origin_get_serializer_class:
         def get_serializer_class(self):
+            """
+            Inject BaseTenantSerializer to the result of get_serializer_class method
+            """
             serializer_cls = origin_get_serializer_class(self)
             if not issubclass(serializer_cls, BaseTenantSerializer):
                 return mix_serializer_cls(serializer_cls)
@@ -60,6 +66,11 @@ def tenant_isolation_view(cls):
     orig_initial_request = getattr(cls, 'initial', None)
 
     def initial(self, request, *args, **kwargs):
+        """
+        We override initial method of views.APIView because it is the first point that the request object is fully
+        initialized (ie it has the user object after authentication). We check if the user is staff or the tenant is
+        matched with the user. If not we raise PermissionDenied
+        """
         orig_initial_request(self, request, *args, **kwargs)
         if not request.user.is_staff:
             tenant = getattr(request, 'tenant', None)

@@ -135,6 +135,8 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "static_collected"
+TESTING = False
+
 TENANT_DETECT_METHOD = env('TENANT_DETECT_METHOD')
 TENANT_HEADER = "X-Tenant-Name"
 # Default primary key field type
