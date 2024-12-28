@@ -48,3 +48,14 @@ services:
       test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -p ${DB_PORT}" ]
       interval: 1s
       start_period: 5s
+
+  redis:
+    image: 'redis:7.2'
+    ports:
+      - ${EXPOSED_REDIS_PORT}:6379
+    env_file:
+      - .env
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 1s
+      start_period: 5s

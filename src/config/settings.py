@@ -158,3 +158,11 @@ SPECTACULAR_SETTINGS = {
 SWAGGER_SETTINGS = {
     "SECURITY_DEFINITIONS": {"api_key": {"type": "apiKey", "in": "header", "name": "Authorization"}},
 }
+CACHES = {
+    "default": {
+        "BACKEND": env("CACHE_BACKEND"),
+    }
+}
+cache_location = env("CACHE_LOCATION")
+if cache_location:
+    CACHES["default"]["LOCATION"] = cache_location
