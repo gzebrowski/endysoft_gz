@@ -4,9 +4,8 @@ from django.conf import settings
 from django.utils.module_loading import import_module, import_string
 from rest_framework.test import APIClient
 
-
 '''
-This code below just search for all installed apps and import the app_conftest.py file and then 
+This code below just search for all installed apps and import the app_conftest.py file and then
 import all fixtures from it to the global scope. This way, you can use the fixtures in your tests
 '''
 app_list = []

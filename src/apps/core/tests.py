@@ -1,10 +1,13 @@
 from typing import Type
+
 from django.db.models import Model
 from django.shortcuts import reverse
-from apps.core.models import TenantUser, Organization, Department, Customer, Tenant
+from rest_framework.status import (HTTP_200_OK, HTTP_201_CREATED,
+                                   HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST,
+                                   HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN)
+
+from apps.core.models import Department, Organization, Tenant, TenantUser
 from apps.users.models import AppUser
-from rest_framework.status import (HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED,
-                                   HTTP_403_FORBIDDEN, HTTP_204_NO_CONTENT)
 
 
 def test_create_tenant(db, api_client, user1, user2):

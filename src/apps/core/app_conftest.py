@@ -1,6 +1,7 @@
 import pytest
 from django.conf import settings
-from apps.core.models import Tenant, TenantUser, Organization, Department
+
+from apps.core.models import Organization, Tenant, TenantUser
 
 
 @pytest.fixture
