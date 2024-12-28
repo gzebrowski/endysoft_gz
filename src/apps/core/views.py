@@ -2,7 +2,7 @@ from drf_spectacular.utils import extend_schema
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
-from apps.core.models import Customer, Department, Organization
+from apps.core.models import Customer, Department, Organization, Tenant
 from apps.core.serializers import (CustomerSerializer, DepartmentSerializer,
                                    OrganizationSerializer, TenantSerializer)
 from common.decorators import tenant_isolation_view
@@ -15,6 +15,10 @@ class AppCommonView(ModelViewSet):
 class TenantView(AppCommonView):
     permission_classes = [IsAuthenticated]
     serializer_class = TenantSerializer
+    queryset = Tenant.objects
+
+    def get_queryset(self):
+        return self.queryset.filter(tenantuser__user=self.request.user)
 
 
 @extend_schema(request=OrganizationSerializer)

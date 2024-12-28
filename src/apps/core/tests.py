@@ -4,27 +4,37 @@ from django.db.models import Model
 from django.shortcuts import reverse
 from rest_framework.status import (HTTP_200_OK, HTTP_201_CREATED,
                                    HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST,
-                                   HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN)
+                                   HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN,
+                                   HTTP_404_NOT_FOUND)
 
 from apps.core.models import Department, Organization, Tenant, TenantUser
 from apps.users.models import AppUser
 
 
-def test_create_tenant(db, api_client, user1, user2):
+def test_create_tenant(db, api_tenant_client, user1, user2):
     create_tenant_url = reverse("api:tenants_url-list")
     data_create1 = {"name": "Tenant 1", "domain": "tenant1"}
     data_create2 = {"name": "Tenant 2", "domain": "tenant2"}
     assert TenantUser.objects.all().count() == 0
-    response = api_client.post(create_tenant_url, data_create1)
+    response = api_tenant_client.post(create_tenant_url, data_create1)
     assert response.status_code == HTTP_401_UNAUTHORIZED
-    response = api_client.post(create_tenant_url, data_create1, HTTP_AUTHORIZATION="Token " + user1.user_auth_token)
+    response = api_tenant_client.post(create_tenant_url, data_create1, user=user1)
     assert response.status_code == HTTP_201_CREATED
-    response = api_client.post(create_tenant_url, data_create2, HTTP_AUTHORIZATION="Token " + user2.user_auth_token)
+    tenant_1_data = response.json()
+    response = api_tenant_client.post(create_tenant_url, data_create2, user=user2)
     assert response.status_code == HTTP_201_CREATED
-    response = api_client.post(create_tenant_url, data_create1, HTTP_AUTHORIZATION="Token " + user1.user_auth_token)
+    # tenant_2_data = response.json()
+    response = api_tenant_client.post(create_tenant_url, data_create1, user=user1)
     assert response.status_code == HTTP_400_BAD_REQUEST
     assert TenantUser.objects.filter(user=user1, tenant__domain="tenant1").count() == 1
     assert TenantUser.objects.filter(user=user2, tenant__domain="tenant2").count() == 1
+    tenant1_detail_url = reverse("api:tenants_url-detail", args=[tenant_1_data['id']])
+    # tenant2_detail_url = reverse("api:tenants_url-detail", args=[tenant_2_data['id']])
+    failed_del_response = api_tenant_client.delete(tenant1_detail_url, user=user2)
+    assert failed_del_response.status_code == HTTP_404_NOT_FOUND
+    good_del_response = api_tenant_client.delete(tenant1_detail_url, user=user1)
+    assert good_del_response.status_code == HTTP_204_NO_CONTENT
+    assert TenantUser.objects.filter(user=user1, tenant__domain="tenant1").count() == 0
 
 
 def _get_cases(user: AppUser, tenant: Tenant, bad_tenant: Tenant, ok_code: int, good_cases_first=False):

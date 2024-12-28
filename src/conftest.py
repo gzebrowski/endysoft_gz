@@ -27,7 +27,7 @@ for app in app_list:
     else:
         for attr in dir(cnf_mod):
             item = getattr(cnf_mod, attr)
-            # all functions decorated with @pytest.fixture has attribute _pytestfixturefunction. So we know
+            # all functions decorated with @pytest.fixture has an attribute _pytestfixturefunction. So we know
             # that this is a fixture
             if hasattr(item, "_pytestfixturefunction"):
                 globals()[attr] = item
